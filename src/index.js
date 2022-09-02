@@ -6,14 +6,13 @@ import './css/style.css';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
 import '../node_modules/basiclightbox/src/styles/main.scss';
 import moment from 'moment';
-import { item } from './js/data';
 import newItem from './js/newToDo';
 import readTodos from './js/todos-API';
 
 const todoNewItem = newItem;
 
 axios.defaults.baseURL = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1';
-// const item = axios.get('/items');
+const item = axios.get('/items');
 
 export const refs = {
   todoList: document.querySelector('.todo-list'),
