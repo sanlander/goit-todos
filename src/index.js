@@ -127,7 +127,7 @@ const addNewItem = e => {
   });
 };
 
-const onOffChecked = e => {
+function onOffChecked(e) {
   if (e.target.nodeName !== 'INPUT') {
     return;
   }
@@ -137,7 +137,7 @@ const onOffChecked = e => {
   trueOrFalse.isDone = !trueOrFalse.isDone;
 
   axios.put(`/items/${inputId}`, trueOrFalse);
-};
+}
 
 function copyToLocalStorage(e) {
   if (refs.inputAddItem.value.length === 0) {

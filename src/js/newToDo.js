@@ -15,8 +15,8 @@ const newItem = ({ id, text, isDone, date }) => {
     </span>
 
     <div class="todo-buttons">
-        <p class="todo__data">Дата/час створення: ${newDate}</p>
         
+        <p class="todo__data">Дата/час створення: ${newDate}</p>
         <img class="todo-open"
         src="images/eye.png"
         width="30"

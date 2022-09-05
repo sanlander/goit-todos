@@ -16,7 +16,7 @@
 
 .todo-item {
   min-width: 50vw;
-  background: silver;
+  background: #faff61c4;
   margin: 5px 0px;
   padding: 5px 10px;
   border: 1px solid grey;
@@ -145,12 +145,10 @@
 }
 
 .todo__data {
-  color: #b35d5d;
   font-size: 14px;
   margin-right: auto;
   font-family: 'Courier New', Courier, monospace;
   color: #0f991d;
-  font-weight: bold;
 }
 
 .todo__text {
