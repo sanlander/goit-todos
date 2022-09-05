@@ -9,7 +9,8 @@ const item = axios.get('/items');
 
 const readTodos = () =>
   item.then(r => {
-    const items = r.data.map(todoNewItem).join('');
+    
+    const items = r.data.sort((a, b) => a.isDone  - b.isDone).map(todoNewItem).join('');
 
     refs.todoList.innerHTML = items;
 
