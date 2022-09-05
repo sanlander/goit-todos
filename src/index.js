@@ -50,8 +50,6 @@ function textInputNewAddOfLocalSt() {
   }
 }
 
-readTodos();
-
 const clickDeleteToDoList = e => {
   if (e.target.nodeName !== 'BUTTON') {
     return;
@@ -130,20 +128,15 @@ const addNewItem = e => {
 };
 
 const onOffChecked = e => {
-  if (e.target.nodeName !== 'SPAN') {
+  if (e.target.nodeName !== 'INPUT') {
     return;
   }
   const inputId = e.target.closest('li').dataset.id;
 
-  item = item.map(x =>
-    x.id === inputId
-      ? {
-          ...x,
-          isDone: !x.isDone,
-        }
-      : x
-  );
-  refs.todoList.innerHTML = item.map(todoNewItem).join('');
+  const trueOrFalse = items.find(x => x.id === inputId);
+  trueOrFalse.isDone = !trueOrFalse.isDone;
+
+  axios.put(`/items/${inputId}`, trueOrFalse);
 };
 
 function copyToLocalStorage(e) {

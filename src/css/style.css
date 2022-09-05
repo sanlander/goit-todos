@@ -154,10 +154,12 @@
 }
 
 .todo__text {
-  cursor: pointer;
   font-size: 18px;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
+}
+.todo__input {
+  cursor: pointer;
 }
 .todo__modal {
   min-width: 50vw;

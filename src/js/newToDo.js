@@ -3,11 +3,16 @@ import moment from 'moment';
 const newItem = ({ id, text, isDone, date }) => {
   let newDate = moment(date).format('DD-MM-YYYY, HH:mm:ss');
   return `
-  <li class="todo-item" data-id="${id}">
+  <li class="todo-item" data-id="${id}">    
 
-    <input type="checkbox" name="todo-done" ${isDone ? 'checked' : ''} />
+    <span class="todo__text">
 
-    <span class="todo__text">${text}</span>
+    <input class="todo__input" type="checkbox" name="todo-done"${
+      isDone ? 'checked' : ''
+    }/>
+    <label>${text}</label>
+    
+    </span>
 
     <div class="todo-buttons">
         <p class="todo__data">Дата/час створення: ${newDate}</p>
