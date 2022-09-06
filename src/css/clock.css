@@ -1,0 +1,59 @@
+.clock {
+  border: 1px solid orangered;
+  border-radius: 5px;
+  background: rgb(63, 74, 84);
+  color: #f4f5f6;
+  padding: 10px;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  margin: 0;
+  -webkit-box-shadow: -10px 10px 9px 0px rgba(91, 99, 166, 1);
+  -moz-box-shadow: -10px 10px 9px 0px rgba(91, 99, 166, 1);
+  box-shadow: -10px 10px 9px 0px rgba(91, 99, 166, 1);
+  animation: myAnim 850ms ease 1s 1 alternate backwards;
+}
+
+@keyframes myAnim {
+  0% {
+    animation-timing-function: ease-in;
+    opacity: 0;
+    transform: translateY(-250px);
+  }
+
+  38% {
+    animation-timing-function: ease-out;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  55% {
+    animation-timing-function: ease-in;
+    transform: translateY(-65px);
+  }
+
+  72% {
+    animation-timing-function: ease-out;
+    transform: translateY(0);
+  }
+
+  81% {
+    animation-timing-function: ease-in;
+    transform: translateY(-28px);
+  }
+
+  90% {
+    animation-timing-function: ease-out;
+    transform: translateY(0);
+  }
+
+  95% {
+    animation-timing-function: ease-in;
+    transform: translateY(-8px);
+  }
+
+  100% {
+    animation-timing-function: ease-out;
+    transform: translateY(0);
+  }
+}

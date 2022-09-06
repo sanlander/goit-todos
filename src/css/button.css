@@ -1,0 +1,27 @@
+.todo-add__button {
+  height: 40px;
+  padding: 0px 12px;
+  background-color: rgba(39, 203, 10, 0.86);
+  border-radius: 4px;
+  border: 2px solid rgba(56, 56, 181, 0.792);
+  font-weight: 700;
+  font-size: 17px;
+  color: rgb(238, 246, 11);
+}
+
+.button-delete {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background: #a18d84;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  margin-left: 15px;
+}
+
+.todo-buttons {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}

@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const newItem = ({ id, text, isDone, date }) => {
+export const newItem = ({ id, text, isDone, date }) => {
   let newDate = moment(date).format('DD-MM-YYYY, HH:mm:ss');
   return `
   <li class="todo-item" data-id="${id}">    
@@ -29,5 +29,3 @@ const newItem = ({ id, text, isDone, date }) => {
   </li>
   `;
 };
-
-export default newItem;

@@ -1,0 +1,18 @@
+body {
+  position: relative;
+  background-color: aliceblue;
+}
+
+.container {
+  text-align: center;
+  background-color: rgb(162, 210, 238);
+  padding: 20px 10px;
+  width: 90%;
+  margin: 20px auto;
+  border-radius: 5px;
+}
+
+.loading {
+  margin: 5px;
+  color: #716e6e;
+}

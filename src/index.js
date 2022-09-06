@@ -1,15 +1,25 @@
-import axios from 'axios';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import shortid from 'shortid';
-import * as basicLightbox from 'basiclightbox';
+/* Import file V 2.0 */
 import './css/style.css';
+import * as basicLightbox from 'basiclightbox';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
-import '../node_modules/basiclightbox/src/styles/main.scss';
-import moment from 'moment';
-import newItem from './js/newToDo';
-import readTodos from './js/todos-API';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { currentTimeOnHomePage } from './js/clock';
+import { TodoApi } from './js/todos-API';
+import { newItem } from './js/newToDo';
+import * as VH from './js/visually-hidden';
 
-const todoNewItem = newItem;
+const todoApi = new TodoApi();
+/* Import file V 2.0 */
+
+// import '../node_modules/basiclightbox/src/styles/main.scss';
+import axios from 'axios';
+import shortid from 'shortid';
+
+import moment from 'moment';
+
+// import readTodos from './js/todos-API';
+
+// const todoNewItem = newItem;
 
 axios.defaults.baseURL = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1';
 const item = axios.get('/items');
@@ -22,21 +32,58 @@ export const refs = {
   inputSort: document.querySelector('.todo-filter__input.sort'),
   clock: document.querySelector('.clock'),
   loading: document.querySelector('.loading'),
+  loadMoreBtn: document.querySelector('.load-more'),
 };
 
+currentTimeOnHomePage();
+
 readTodos();
+
+async function readTodos() {
+  VH.loadingOn();
+  todoApi.resetPage();
+  todoApi.maxShowPages();
+
+  await todoApi.fetchApi().then(r => {
+    
+    const itemsList = r.map(newItem).join('');
+
+    refs.todoList.innerHTML = itemsList;
+
+    VH.loadingOff();
+    VH.loadMoreOn();
+    todoApi.pageIncrement();
+    
+  });
+  // console.log(todoApi.totalItems);
+}
+
+async function onClickBtnLoadMore() {
+  VH.loadingOn();
+  VH.loadMoreOff();
+  await todoApi.fetchApi().then(r => {
+    if (todoApi.page === todoApi.maxPages) {
+      Notify.info('Показано весь список!');
+      VH.loadingOff();
+      VH.loadMoreOff();
+      const itemsList = r.map(newItem).join('');
+
+      refs.todoList.insertAdjacentHTML('beforeend', itemsList);
+      return;
+    }
+    const itemsList = r.map(newItem).join('');
+
+    refs.todoList.insertAdjacentHTML('beforeend', itemsList);
+    VH.loadingOff();
+    VH.loadMoreOn();
+    todoApi.pageIncrement();
+  });
+}
 
 let items = [];
 item.then(({ data }) => {
   items = data;
 });
-
-function currentTimeOnHomePage() {
-  setInterval(() => {
-    refs.clock.textContent = moment().format('DD-MM-YYYY, HH:mm:ss');
-  }, 1000);
-}
-currentTimeOnHomePage();
 
 const LOCAL_STORAGE_TEXT = 'text-new-todo';
 
@@ -180,3 +227,4 @@ refs.todoList.addEventListener('click', onOffChecked);
 refs.todoList.addEventListener('click', onShowModal);
 refs.btnAdd.addEventListener('click', addNewItem);
 refs.inputAddItem.addEventListener('input', copyToLocalStorage);
+refs.loadMoreBtn.addEventListener('click', onClickBtnLoadMore);

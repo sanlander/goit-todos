@@ -1,0 +1,12 @@
+.todo__modal {
+  min-width: 50vw;
+  padding: 10px 30px;
+  background-color: #f3f77e;
+  border-radius: 15px;
+  font-family: 'Courier New', Courier, monospace;
+}
+.todo-modal-text-title {
+  padding-top: 20px;
+  color: #0f991d;
+}
+
