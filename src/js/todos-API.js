@@ -12,7 +12,9 @@ export class TodoApi {
 
   fetchApi() {
     return axios
-      .get(`${this.url}?sortBy=isDone&p=${this.page}&l=${this.limitPage}`)
+      .get(
+        `${this.url}?sortBy=date&order=desc&p=${this.page}&l=${this.limitPage}`
+      )
       .then(r => r.data);
   }
   maxShowPages() {
@@ -20,16 +22,27 @@ export class TodoApi {
       this.totalItems = r.data.length;
       this.maxPages = Math.ceil(r.data.length / this.limitPage);
 
-      Notify.success(`Знайдено ${this.totalItems} записів`);
+      // Notify.success(`Знайдено ${this.totalItems} записів`, {
+      //   width: '205px',
+      //   cssAnimationStyle: 'zoom',
+      // });
     });
   }
+  getTodo(id) {
+    return axios.get(`${this.url}/${id}`).then(r => r.data);
+
+  }
+
   resetPage() {
     this.page = 1;
   }
   pageIncrement() {
     this.page += 1;
   }
-  addTodo(newTodo) {
-    //
+  async addTodo(newTodo) {
+    await axios.post(this.url, newTodo);
+  }
+  async deleteTodo(id) {
+    await axios.delete(`${this.url}/${id}`);
   }
 }

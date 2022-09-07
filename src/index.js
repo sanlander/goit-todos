@@ -3,6 +3,7 @@ import './css/style.css';
 import * as basicLightbox from 'basiclightbox';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
 import { newItem } from './js/newToDo';
@@ -14,7 +15,6 @@ const todoApi = new TodoApi();
 // import '../node_modules/basiclightbox/src/styles/main.scss';
 import axios from 'axios';
 import shortid from 'shortid';
-
 import moment from 'moment';
 
 // import readTodos from './js/todos-API';
@@ -45,7 +45,6 @@ async function readTodos() {
   todoApi.maxShowPages();
 
   await todoApi.fetchApi().then(r => {
-    
     const itemsList = r.map(newItem).join('');
 
     refs.todoList.innerHTML = itemsList;
@@ -53,17 +52,15 @@ async function readTodos() {
     VH.loadingOff();
     VH.loadMoreOn();
     todoApi.pageIncrement();
-    
   });
-  // console.log(todoApi.totalItems);
 }
 
 async function onClickBtnLoadMore() {
   VH.loadingOn();
   VH.loadMoreOff();
   await todoApi.fetchApi().then(r => {
-    if (todoApi.page === todoApi.maxPages) {
-      Notify.info('Показано весь список!');
+    if (todoApi.page >= todoApi.maxPages) {
+      Notify.info('Відображено всі записи!');
       VH.loadingOff();
       VH.loadMoreOff();
       const itemsList = r.map(newItem).join('');
@@ -78,6 +75,31 @@ async function onClickBtnLoadMore() {
     VH.loadMoreOn();
     todoApi.pageIncrement();
   });
+  scrollOnBtnLoadMore();
+}
+
+async function addNewItem(e) {
+  e.preventDefault();
+
+  if (refs.inputAddItem.value.trim().length === 0) {
+    return;
+  }
+
+  const newItem = {
+    text: refs.inputAddItem.value,
+    isDone: false,
+    date: Date.now(),
+  };
+  await todoApi.addTodo(newItem);
+
+  refs.inputAddItem.value = '';
+  localStorage.removeItem(LOCAL_STORAGE_TEXT);
+
+  Notify.success('Новий запис створено!!', {
+    width: '205px',
+  });
+
+  readTodos();
 }
 
 let items = [];
@@ -97,27 +119,20 @@ function textInputNewAddOfLocalSt() {
   }
 }
 
-const clickDeleteToDoList = e => {
+async function clickDeleteToDoList(e) {
   if (e.target.nodeName !== 'BUTTON') {
     return;
   }
-  // if (!confirm('Дійсно видалити ??')) {
-  //   return;
-  // }
 
-  let idOfDelete = e.target.closest('li').dataset.id;
+  const idOfDelete = e.target.closest('li').dataset.id;
 
-  axios.delete(`/items/${idOfDelete}`);
-  items = items.filter(x => x.id !== `${idOfDelete}`);
-
-  refs.todoList.innerHTML = items.map(todoNewItem).join('');
+  await todoApi.deleteTodo(idOfDelete);
 
   Notify.failure('Запис видалено!', {
-    fontSize: '14px',
-    timeout: 2000,
-    clickToClose: true,
+    width: '205px',
   });
-};
+  readTodos();
+}
 
 const sortListToDo = () => {
   const sorted = array => {
@@ -145,35 +160,6 @@ const searchFilter = () => {
   refs.todoList.innerHTML = searchFilterList.map(todoNewItem).join('');
 };
 
-const addNewItem = e => {
-  e.preventDefault();
-
-  if (refs.inputAddItem.value.trim().length === 0) {
-    return;
-  }
-
-  const newItem = {
-    id: shortid(),
-    text: refs.inputAddItem.value,
-    isDone: false,
-    date: Date.now(),
-  };
-
-  items.push(newItem);
-  axios.post('/items', newItem);
-
-  refs.todoList.insertAdjacentHTML('afterbegin', todoNewItem(newItem));
-
-  refs.inputAddItem.value = '';
-  localStorage.removeItem(LOCAL_STORAGE_TEXT);
-
-  Notify.success('Новий запис створено!!', {
-    fontSize: '14px',
-    timeout: 2000,
-    clickToClose: true,
-  });
-};
-
 function onOffChecked(e) {
   if (e.target.nodeName !== 'INPUT') {
     return;
@@ -199,24 +185,31 @@ function onShowModal(e) {
   if (e.target.nodeName !== 'IMG') {
     return;
   }
-  const itemsFind = items.find(x => x.id === e.target.closest('li').dataset.id);
 
-  const instance = basicLightbox.create(`
+  const idItemsFind = e.target.closest('li').dataset.id;
+
+  todoApi.getTodo(idItemsFind).then(r => {
+    const instance = basicLightbox.create(`
     <div class="todo__modal">
-    <h1>${itemsFind.text}</h1>
+    <h1>${r.text}</h1>
     <p class="todo-modal-text-title">Дата створення:</p>
-    <p>${moment(itemsFind.date).format('DD-MM-YYYY, HH:mm:ss')}</p>
+    <p>${moment(r.date).format('DD-MM-YYYY, HH:mm:ss')}</p>
     </div>
   `);
-  instance.show();
+    instance.show();
 
-  window.addEventListener('keydown', onKey);
-  function onKey(e) {
-    if (e.key === 'Escape') {
-      instance.close();
-      window.removeEventListener('keydown', onKey);
+    window.addEventListener('keydown', onKey);
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        instance.close();
+        window.removeEventListener('keydown', onKey);
+      }
     }
-  }
+  });
+}
+
+function scrollOnBtnLoadMore() {
+  refs.loadMoreBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
 // ----- EventListeners--------
