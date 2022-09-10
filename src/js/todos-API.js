@@ -7,12 +7,15 @@ export class TodoApi {
     this.totalItems = null;
     this.page = 1;
     this.limitPage = 5;
-    this.sort = "date&order=desc";
+    this.sort = 'date&order=desc';
+    this.searchFiltervalue = '';
   }
 
   fetchApi() {
     return axios
-      .get(`${this.url}?sortBy=${this.sort}&p=${this.page}&l=${this.limitPage}`)
+      .get(
+        `${this.url}?sortBy=${this.sort}&search=${this.searchFiltervalue}&p=${this.page}&l=${this.limitPage}`
+      )
       .then(r => r.data);
   }
   async fetchApiBySort(param) {

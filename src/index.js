@@ -4,8 +4,8 @@ import * as basicLightbox from 'basiclightbox';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
-import { Report } from 'notiflix/build/notiflix-report-aio';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+import debounce from 'lodash.debounce';
 
 import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
@@ -17,7 +17,6 @@ const todoApi = new TodoApi();
 
 // import '../node_modules/basiclightbox/src/styles/main.scss';
 import axios from 'axios';
-import shortid from 'shortid';
 import moment from 'moment';
 
 // import readTodos from './js/todos-API';
@@ -179,11 +178,8 @@ const sortListToDo = () => {
 };
 
 const searchFilter = () => {
-  const searchFilterList = items.filter(x =>
-    x.text.toLocaleLowerCase().includes(refs.inputSearch.value.toLowerCase())
-  );
-
-  refs.todoList.innerHTML = searchFilterList.map(todoNewItem).join('');
+  todoApi.searchFiltervalue = refs.inputSearch.value.toLowerCase();
+  readTodos();
 };
 
 function onOffChecked(e) {
@@ -239,7 +235,7 @@ function scrollOnBtnLoadMore() {
 }
 
 // ----- EventListeners--------
-refs.inputSearch.addEventListener('input', searchFilter);
+refs.inputSearch.addEventListener('input', debounce(searchFilter, 500));
 refs.inputSort.addEventListener('change', sortListToDo);
 refs.todoList.addEventListener('click', clickDeleteToDoList);
 refs.todoList.addEventListener('click', onOffChecked);
