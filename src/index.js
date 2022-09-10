@@ -32,6 +32,7 @@ export const refs = {
   inputAddItem: document.querySelector('.todo-add__input'),
   inputSearch: document.querySelector('.todo-filter__input.search'),
   inputSort: document.querySelector('.todo-filter__input.sort'),
+  inputPageLimit: document.querySelector('.page-limit'),
   clock: document.querySelector('.clock'),
   loading: document.querySelector('.loading'),
   loadMoreBtn: document.querySelector('.load-more'),
@@ -227,6 +228,28 @@ function onShowModal(e) {
   });
 }
 
+function onClickInputPageLimit(e) {
+  switch (e.target.value) {
+    case 'page-10':
+      todoApi.limitPage = 10;
+      readTodos();
+      break;
+    case 'page-20':
+      todoApi.limitPage = 20;
+      readTodos();
+      break;
+    case 'page-50':
+      todoApi.limitPage = 50;
+      readTodos();
+      break;
+
+    default:
+      todoApi.limitPage = 5;
+      readTodos();
+      break;
+  }
+}
+
 function scrollOnBtnLoadMore() {
   refs.loadMoreBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
@@ -240,3 +263,4 @@ refs.todoList.addEventListener('click', onShowModal);
 refs.btnAdd.addEventListener('click', addNewItem);
 refs.inputAddItem.addEventListener('input', copyToLocalStorage);
 refs.loadMoreBtn.addEventListener('click', onClickBtnLoadMore);
+refs.inputPageLimit.addEventListener('change', onClickInputPageLimit);

@@ -6,11 +6,17 @@
     <!-- <link rel="stylesheet" href="./css/style.css" /> -->
     <title>To-Do List</title>
   </head> 
-  <body> 
+  
+  <body>
+     
     <div class="container">
-
-      <dir class="clock"></dir>
-
+      
+      <div class="clock"></div>
+      
+      <button type="button" class="page-up">
+        <img src="./images/up-arrow.png" alt="up" width="50">
+      </button>
+      
       <form class="todo-form">
         <label class="todo-add">
           Введіть текст:
@@ -29,7 +35,7 @@
           </button>
         </label>
       </br>
-
+<div class="box-todo-filter">
         <label class="todo-filter__label">
          Пошук:
 
@@ -54,6 +60,20 @@
             <option value="dateDown">по даті (спочатку старіші)</option>
           </select>
         </label>
+
+        <label class="todo-filter__label">
+          <select
+            class="todo-filter__input page-limit"
+            name="select"
+            id=""
+          >
+            <option value="page-5">5 записів на сторінці</option>
+            <option value="page-10">10 записів на сторінці</option>
+            <option value="page-20">20 записів на сторінці</option>
+            <option value="page-50">50 записів на сторінці</option>
+          </select>
+        </label>
+        </div>
       </form>
 
       

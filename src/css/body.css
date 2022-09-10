@@ -16,3 +16,9 @@ body {
   margin: 5px;
   color: #716e6e;
 }
+
+.box-todo-filter {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
