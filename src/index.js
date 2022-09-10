@@ -4,6 +4,9 @@ import * as basicLightbox from 'basiclightbox';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Report } from 'notiflix/build/notiflix-report-aio';
+import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
+
 import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
 import { newItem } from './js/newToDo';
@@ -40,6 +43,7 @@ currentTimeOnHomePage();
 readTodos();
 
 async function readTodos() {
+  Loading.pulse('Loading...');
   VH.loadingOn();
   todoApi.resetPage();
   todoApi.maxShowPages();
@@ -49,6 +53,7 @@ async function readTodos() {
 
     refs.todoList.innerHTML = itemsList;
 
+    Loading.remove();
     VH.loadingOff();
     VH.loadMoreOn();
     todoApi.pageIncrement();
@@ -56,11 +61,13 @@ async function readTodos() {
 }
 
 async function onClickBtnLoadMore() {
+  Loading.pulse('Loading...');
   VH.loadingOn();
   VH.loadMoreOff();
   await todoApi.fetchApi().then(r => {
     if (todoApi.page >= todoApi.maxPages) {
       Notify.info('Відображено всі записи!');
+      Loading.remove();
       VH.loadingOff();
       VH.loadMoreOff();
       const itemsList = r.map(newItem).join('');
@@ -68,9 +75,11 @@ async function onClickBtnLoadMore() {
       refs.todoList.insertAdjacentHTML('beforeend', itemsList);
       return;
     }
+
     const itemsList = r.map(newItem).join('');
 
     refs.todoList.insertAdjacentHTML('beforeend', itemsList);
+    Loading.remove();
     VH.loadingOff();
     VH.loadMoreOn();
     todoApi.pageIncrement();
@@ -124,31 +133,48 @@ async function clickDeleteToDoList(e) {
     return;
   }
 
-  const idOfDelete = e.target.closest('li').dataset.id;
+  Confirm.show(
+    'Видалення запису',
+    'Ви впевнені?',
+    'Так',
+    'Ні',
+    async () => {
+      const idOfDelete = e.target.closest('li').dataset.id;
 
-  await todoApi.deleteTodo(idOfDelete);
+      await todoApi.deleteTodo(idOfDelete);
 
-  Notify.failure('Запис видалено!', {
-    width: '205px',
-  });
-  readTodos();
+      Notify.failure('Запис видалено!', {
+        width: '205px',
+      });
+      readTodos();
+    },
+    () => {
+      return;
+    },
+    {}
+  );
 }
 
 const sortListToDo = () => {
-  const sorted = array => {
-    refs.inputSearch.value = '';
-    const sortArr = array.map(todoNewItem).join('');
-
-    refs.todoList.innerHTML = sortArr;
-  };
+  refs.inputSearch.value = '';
 
   switch (refs.inputSort.value) {
     case 'az':
-      return sorted([...items].sort((a, b) => a.text.localeCompare(b.text)));
+      todoApi.sort = 'text&order=asc';
+      readTodos();
+      return;
     case 'za':
-      return sorted([...items].sort((a, b) => b.text.localeCompare(a.text)));
+      todoApi.sort = 'text&order=desc';
+      readTodos();
+      return;
+    case 'dateUp':
+      todoApi.sort = 'date&order=asc';
+      readTodos();
+      return;
+
     default:
-      return sorted([...items]);
+      todoApi.sort = 'date&order=desc';
+      readTodos();
   }
 };
 

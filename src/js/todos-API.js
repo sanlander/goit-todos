@@ -1,4 +1,3 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import axios from 'axios';
 
 export class TodoApi {
@@ -8,15 +7,22 @@ export class TodoApi {
     this.totalItems = null;
     this.page = 1;
     this.limitPage = 5;
+    this.sort = "date&order=desc";
   }
 
   fetchApi() {
     return axios
+      .get(`${this.url}?sortBy=${this.sort}&p=${this.page}&l=${this.limitPage}`)
+      .then(r => r.data);
+  }
+  async fetchApiBySort(param) {
+    return await axios
       .get(
-        `${this.url}?sortBy=date&order=desc&p=${this.page}&l=${this.limitPage}`
+        `${this.url}?sortBy=text&order=asc&p=${this.page}&l=${this.limitPage}`
       )
       .then(r => r.data);
   }
+
   maxShowPages() {
     axios.get(this.url).then(r => {
       this.totalItems = r.data.length;
@@ -30,7 +36,6 @@ export class TodoApi {
   }
   getTodo(id) {
     return axios.get(`${this.url}/${id}`).then(r => r.data);
-
   }
 
   resetPage() {
