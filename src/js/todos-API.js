@@ -18,13 +18,6 @@ export class TodoApi {
       )
       .then(r => r.data);
   }
-  async fetchApiBySort(param) {
-    return await axios
-      .get(
-        `${this.url}?sortBy=text&order=asc&p=${this.page}&l=${this.limitPage}`
-      )
-      .then(r => r.data);
-  }
 
   maxShowPages() {
     axios.get(this.url).then(r => {
@@ -39,6 +32,13 @@ export class TodoApi {
   }
   getTodo(id) {
     return axios.get(`${this.url}/${id}`).then(r => r.data);
+  }
+  async updateTodo(id) {
+    const updateTodo = await this.getTodo(id).then(r => {
+      return { isDone: !r.isDone };
+    });
+
+    await axios.put(`${this.url}/${id}`, updateTodo);
   }
 
   resetPage() {

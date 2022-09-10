@@ -24,7 +24,7 @@ import moment from 'moment';
 // const todoNewItem = newItem;
 
 axios.defaults.baseURL = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1';
-const item = axios.get('/items');
+// const item = axios.get('/items');
 
 export const refs = {
   todoList: document.querySelector('.todo-list'),
@@ -65,7 +65,7 @@ async function onClickBtnLoadMore() {
   VH.loadMoreOff();
   await todoApi.fetchApi().then(r => {
     if (todoApi.page >= todoApi.maxPages) {
-      Notify.info('Відображено всі записи!');
+      Notify.info('Відображено всі записи!', { width: '205px' });
       Loading.remove();
       VH.loadingOff();
       VH.loadMoreOff();
@@ -110,10 +110,10 @@ async function addNewItem(e) {
   readTodos();
 }
 
-let items = [];
-item.then(({ data }) => {
-  items = data;
-});
+// let items = [];
+// item.then(({ data }) => {
+//   items = data;
+// });
 
 const LOCAL_STORAGE_TEXT = 'text-new-todo';
 
@@ -182,16 +182,13 @@ const searchFilter = () => {
   readTodos();
 };
 
-function onOffChecked(e) {
+async function onOffChecked(e) {
   if (e.target.nodeName !== 'INPUT') {
     return;
   }
-  const inputId = e.target.closest('li').dataset.id;
+  const todoId = e.target.closest('li').dataset.id;
 
-  const trueOrFalse = items.find(x => x.id === inputId);
-  trueOrFalse.isDone = !trueOrFalse.isDone;
-
-  axios.put(`/items/${inputId}`, trueOrFalse);
+  todoApi.updateTodo(todoId);
 }
 
 function copyToLocalStorage(e) {
