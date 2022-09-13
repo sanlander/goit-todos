@@ -14,7 +14,7 @@ export class TodoApi {
   fetchApi() {
     return axios
       .get(
-        `${this.url}?sortBy=${this.sort}&search=${this.searchFiltervalue}&p=${this.page}&l=${this.limitPage}`
+        `${this.url}?sortBy=${this.sort}&text=${this.searchFiltervalue}&p=${this.page}&l=${this.limitPage}`
       )
       .then(r => r.data);
   }

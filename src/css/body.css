@@ -1,6 +1,8 @@
 body {
   position: relative;
-  background-color: aliceblue;
+  background-color: rgb(252, 252, 236);
+  margin: 0;
+  padding: 20px 10px;
 }
 
 .container {
@@ -8,7 +10,7 @@ body {
   background-color: rgb(162, 210, 238);
   padding: 20px 10px;
   width: 90%;
-  margin: 20px auto;
+  margin: 0px auto;
   border-radius: 5px;
 }
 

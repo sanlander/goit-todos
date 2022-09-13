@@ -1,4 +1,4 @@
-import { refs } from '../index';
+import { refs } from './refs';
 
 export function loadingOn() {
   refs.loading.classList.remove('visually-hidden');

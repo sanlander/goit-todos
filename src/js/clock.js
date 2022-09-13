@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { refs } from '../index';
+import { refs } from './refs';
 
 export function currentTimeOnHomePage() {
   setInterval(() => {

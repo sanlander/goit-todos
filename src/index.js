@@ -1,4 +1,5 @@
 /* Import file V 2.0 */
+import moment from 'moment';
 import './css/style.css';
 import * as basicLightbox from 'basiclightbox';
 import '../node_modules/basiclightbox/dist/basicLightbox.min.css';
@@ -6,37 +7,13 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import { Confirm } from 'notiflix/build/notiflix-confirm-aio';
 import debounce from 'lodash.debounce';
-
+import { refs } from './js/refs';
 import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
 import { newItem } from './js/newToDo';
 import * as VH from './js/visually-hidden';
 
 const todoApi = new TodoApi();
-/* Import file V 2.0 */
-
-// import '../node_modules/basiclightbox/src/styles/main.scss';
-import axios from 'axios';
-import moment from 'moment';
-
-// import readTodos from './js/todos-API';
-
-// const todoNewItem = newItem;
-
-axios.defaults.baseURL = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1';
-// const item = axios.get('/items');
-
-export const refs = {
-  todoList: document.querySelector('.todo-list'),
-  btnAdd: document.querySelector('.todo-add__button'),
-  inputAddItem: document.querySelector('.todo-add__input'),
-  inputSearch: document.querySelector('.todo-filter__input.search'),
-  inputSort: document.querySelector('.todo-filter__input.sort'),
-  inputPageLimit: document.querySelector('.page-limit'),
-  clock: document.querySelector('.clock'),
-  loading: document.querySelector('.loading'),
-  loadMoreBtn: document.querySelector('.load-more'),
-};
 
 currentTimeOnHomePage();
 
@@ -110,11 +87,6 @@ async function addNewItem(e) {
 
   readTodos();
 }
-
-// let items = [];
-// item.then(({ data }) => {
-//   items = data;
-// });
 
 const LOCAL_STORAGE_TEXT = 'text-new-todo';
 
@@ -254,6 +226,10 @@ function scrollOnBtnLoadMore() {
   refs.loadMoreBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
+function onPageUp() {
+  refs.body.scrollIntoView({ behavior: 'smooth' });
+}
+
 // ----- EventListeners--------
 refs.inputSearch.addEventListener('input', debounce(searchFilter, 500));
 refs.inputSort.addEventListener('change', sortListToDo);
@@ -264,3 +240,4 @@ refs.btnAdd.addEventListener('click', addNewItem);
 refs.inputAddItem.addEventListener('input', copyToLocalStorage);
 refs.loadMoreBtn.addEventListener('click', onClickBtnLoadMore);
 refs.inputPageLimit.addEventListener('change', onClickInputPageLimit);
+refs.pageUpBtn.addEventListener('click', onPageUp);
