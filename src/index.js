@@ -12,6 +12,7 @@ import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
 import { newItem } from './js/newToDo';
 import * as VH from './js/visually-hidden';
+import './js/scrollUpBtn';
 
 const todoApi = new TodoApi();
 
@@ -226,11 +227,7 @@ function scrollOnBtnLoadMore() {
   refs.loadMoreBtn.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
-function onPageUp() {
-  refs.body.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ----- EventListeners--------
+// -------- EventListeners --------
 refs.inputSearch.addEventListener('input', debounce(searchFilter, 500));
 refs.inputSort.addEventListener('change', sortListToDo);
 refs.todoList.addEventListener('click', clickDeleteToDoList);
@@ -240,4 +237,3 @@ refs.btnAdd.addEventListener('click', addNewItem);
 refs.inputAddItem.addEventListener('input', copyToLocalStorage);
 refs.loadMoreBtn.addEventListener('click', onClickBtnLoadMore);
 refs.inputPageLimit.addEventListener('change', onClickInputPageLimit);
-refs.pageUpBtn.addEventListener('click', onPageUp);
