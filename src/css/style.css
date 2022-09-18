@@ -44,11 +44,14 @@
   margin-right: 10px;
 }
 
-.todo-filter__input {
+.todo-filter__input,
+.total-page {
   border-radius: 4px;
+  min-width: 170px;
   height: 30px;
   border: 2px solid green;
   color: #000000;
+  box-sizing: border-box;
 }
 
 .todo-list {
@@ -77,4 +80,14 @@
 }
 .todo__input {
   cursor: pointer;
+}
+
+.total-page {
+  justify-content: center;
+  background-color: #FFC800;
+  align-items: center;
+  display: flex;
+  padding: 0 5px;
+  font-family: cursive;
+  font-weight: 400;
 }

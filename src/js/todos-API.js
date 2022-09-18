@@ -11,27 +11,28 @@ export class TodoApi {
     this.searchFiltervalue = '';
   }
 
-  fetchApi() {
-    return axios
+  async fetchApi() {
+    return await axios
       .get(
         `${this.url}?sortBy=${this.sort}&text=${this.searchFiltervalue}&p=${this.page}&l=${this.limitPage}`
       )
       .then(r => r.data);
   }
 
-  maxShowPages() {
-    axios.get(this.url).then(r => {
+  async getTotalItems() {
+    await axios.get(this.url).then(r => {
       this.totalItems = r.data.length;
-      this.maxPages = Math.ceil(r.data.length / this.limitPage);
-
-      // Notify.success(`Знайдено ${this.totalItems} записів`, {
-      //   width: '205px',
-      //   cssAnimationStyle: 'zoom',
-      // });
     });
   }
-  getTodo(id) {
-    return axios.get(`${this.url}/${id}`).then(r => r.data);
+
+  async maxShowPages() {
+    await axios.get(this.url).then(r => {
+      this.maxPages = Math.ceil(r.data.length / this.limitPage);
+    });
+  }
+
+  async getTodo(id) {
+    return await axios.get(`${this.url}/${id}`).then(r => r.data);
   }
   async updateTodo(id) {
     const updateTodo = await this.getTodo(id).then(r => {

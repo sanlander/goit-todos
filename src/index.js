@@ -18,13 +18,14 @@ const todoApi = new TodoApi();
 
 currentTimeOnHomePage();
 
-readTodos();
+renderTodos();
 
-async function readTodos() {
+async function renderTodos() {
   Loading.pulse('Loading...');
   VH.loadingOn();
   todoApi.resetPage();
-  todoApi.maxShowPages();
+  await todoApi.maxShowPages();
+  await todoApi.getTotalItems();
 
   await todoApi.fetchApi().then(r => {
     const itemsList = r.map(newItem).join('');
@@ -34,8 +35,15 @@ async function readTodos() {
     Loading.remove();
     VH.loadingOff();
     VH.loadMoreOn();
+
     todoApi.pageIncrement();
+
+    insertTotalItems();
   });
+}
+
+async function insertTotalItems() {
+  refs.totalItems.innerHTML = `Знайдено ${todoApi.totalItems} записів`;
 }
 
 async function onClickBtnLoadMore() {
@@ -44,6 +52,8 @@ async function onClickBtnLoadMore() {
   VH.loadMoreOff();
   await todoApi.fetchApi().then(r => {
     if (todoApi.page >= todoApi.maxPages) {
+      console.log(todoApi.page);
+      console.log(todoApi.maxPages);
       Notify.info('Відображено всі записи!', { width: '205px' });
       Loading.remove();
       VH.loadingOff();
@@ -63,6 +73,8 @@ async function onClickBtnLoadMore() {
     todoApi.pageIncrement();
   });
   scrollOnBtnLoadMore();
+  console.log(todoApi.page);
+  console.log(todoApi.maxPages);
 }
 
 async function addNewItem(e) {
@@ -86,7 +98,7 @@ async function addNewItem(e) {
     width: '205px',
   });
 
-  readTodos();
+  renderTodos();
 }
 
 const LOCAL_STORAGE_TEXT = 'text-new-todo';
@@ -119,7 +131,7 @@ async function clickDeleteToDoList(e) {
       Notify.failure('Запис видалено!', {
         width: '205px',
       });
-      readTodos();
+      renderTodos();
     },
     () => {
       return;
@@ -134,26 +146,26 @@ const sortListToDo = () => {
   switch (refs.inputSort.value) {
     case 'az':
       todoApi.sort = 'text&order=asc';
-      readTodos();
+      renderTodos();
       return;
     case 'za':
       todoApi.sort = 'text&order=desc';
-      readTodos();
+      renderTodos();
       return;
     case 'dateUp':
       todoApi.sort = 'date&order=asc';
-      readTodos();
+      renderTodos();
       return;
 
     default:
       todoApi.sort = 'date&order=desc';
-      readTodos();
+      renderTodos();
   }
 };
 
 const searchFilter = () => {
   todoApi.searchFiltervalue = refs.inputSearch.value.toLowerCase();
-  readTodos();
+  renderTodos();
 };
 
 async function onOffChecked(e) {
@@ -205,20 +217,20 @@ function onClickInputPageLimit(e) {
   switch (e.target.value) {
     case 'page-10':
       todoApi.limitPage = 10;
-      readTodos();
+      renderTodos();
       break;
     case 'page-20':
       todoApi.limitPage = 20;
-      readTodos();
+      renderTodos();
       break;
     case 'page-50':
       todoApi.limitPage = 50;
-      readTodos();
+      renderTodos();
       break;
 
     default:
       todoApi.limitPage = 5;
-      readTodos();
+      renderTodos();
       break;
   }
 }

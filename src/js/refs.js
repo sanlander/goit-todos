@@ -10,4 +10,5 @@ export const refs = {
   loadMoreBtn: document.querySelector('.load-more'),
   pageUpBtn: document.querySelector('.page-up'),
   body: document.querySelector('body'),
+  totalItems: document.querySelector('.total-page'),
 };
