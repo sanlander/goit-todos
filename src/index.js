@@ -101,8 +101,10 @@ async function onPaginationBtnClick(e) {
     );
     const currentPage = todoApi.page - 1;
     const newPage = indxNextBtn - indxCurrentPage + currentPage;
-
-    renderTodos(newPage);
+    await renderTodos(newPage);
+    if (newPage >= todoApi.maxPages) {
+      await VH.loadMoreOff();
+    }
     return;
   }
   if (button.contains('tui-prev-is-ellip')) {
@@ -177,7 +179,7 @@ async function addNewItem(e) {
     width: '205px',
   });
 
-  renderTodos();
+  await renderTodos();
 }
 
 const LOCAL_STORAGE_TEXT = 'text-new-todo';
@@ -231,7 +233,7 @@ const sortListToDo = () => {
       todoApi.sort = 'text&order=desc';
       renderTodos();
       return;
-    case 'dateUp':
+    case 'dateDown':
       todoApi.sort = 'date&order=asc';
       renderTodos();
       return;
