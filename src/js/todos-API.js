@@ -1,12 +1,14 @@
 import axios from 'axios';
 
 export class TodoApi {
+  DEFAULT_LIMIT_PAGE = 2;
+
   constructor() {
     this.url = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1/items';
     this.maxPages = null;
     this.totalItems = null;
     this.page = 1;
-    this.limitPage = 5;
+    this.limitPage = this.DEFAULT_LIMIT_PAGE;
     this.sort = 'date&order=desc';
     this.searchFiltervalue = '';
   }
@@ -42,10 +44,10 @@ export class TodoApi {
     await axios.put(`${this.url}/${id}`, updateTodo);
   }
 
-  resetPage() {
-    this.page = 1;
+  async resetPage(value) {
+    this.page = value || 1;
   }
-  pageIncrement() {
+  async pageIncrement() {
     this.page += 1;
   }
   async addTodo(newTodo) {

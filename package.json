@@ -24,7 +24,8 @@
     "modern-normalize": "^1.1.0",
     "moment": "^2.29.4",
     "notiflix": "^3.2.5",
-    "shortid": "^2.2.16"
+    "shortid": "^2.2.16",
+    "tui-pagination": "^3.4.1"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.6.0",

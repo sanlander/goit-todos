@@ -11,4 +11,8 @@ export const refs = {
   pageUpBtn: document.querySelector('.page-up'),
   body: document.querySelector('body'),
   totalItems: document.querySelector('.total-page'),
+  inputPageLimitDefault: document.querySelector('.page-default'),
+  // paginationBtn: document.querySelector('.tui-pagination'),
 };
+
+

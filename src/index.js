@@ -1,4 +1,5 @@
-/* Import file V 2.0 */
+import Pagination from 'tui-pagination';
+import 'tui-pagination/dist/tui-pagination.css';
 import moment from 'moment';
 import './css/style.css';
 import * as basicLightbox from 'basiclightbox';
@@ -20,10 +21,11 @@ currentTimeOnHomePage();
 
 renderTodos();
 
-async function renderTodos() {
+async function renderTodos(value) {
+  refs.inputPageLimitDefault.textContent = `${todoApi.DEFAULT_LIMIT_PAGE} записів на сторінці`;
   Loading.pulse('Loading...');
   VH.loadingOn();
-  todoApi.resetPage();
+  await todoApi.resetPage(value);
   await todoApi.maxShowPages();
   await todoApi.getTotalItems();
 
@@ -39,6 +41,7 @@ async function renderTodos() {
     todoApi.pageIncrement();
 
     insertTotalItems();
+    addPagination(value);
   });
 }
 
@@ -46,14 +49,91 @@ async function insertTotalItems() {
   refs.totalItems.innerHTML = `Знайдено ${todoApi.totalItems} записів`;
 }
 
+// Кнопки "Пагінації"
+let paginationBtnLocal = [];
+async function addPagination(currentPage) {
+  var pagination = await new Pagination('tui-pagination-container', {
+    totalItems: todoApi.totalItems,
+    itemsPerPage: todoApi.limitPage,
+    visiblePages: 5,
+    page: currentPage || 1,
+  });
+  const paginationBtn = document.querySelectorAll('.tui-page-btn');
+  paginationBtnLocal = Array.from(paginationBtn);
+
+  for (let buttonItem of paginationBtn) {
+    buttonItem.addEventListener('click', onPaginationBtnClick);
+  }
+}
+
+async function onPaginationBtnClick(e) {
+  if (e.currentTarget.nodeName !== 'A') return;
+
+  const button = e.currentTarget.classList;
+
+  if (button.contains('tui-next')) {
+    const currentPage = todoApi.page;
+    await renderTodos(currentPage);
+    if (currentPage >= todoApi.maxPages) {
+      VH.loadMoreOff();
+    }
+    return;
+  }
+  if (button.contains('tui-prev')) {
+    const currentPage = todoApi.page - 2;
+    renderTodos(currentPage);
+    return;
+  }
+  if (button.contains('tui-last')) {
+    const currentPage = todoApi.maxPages;
+    await renderTodos(currentPage);
+    await VH.loadMoreOff();
+    return;
+  }
+  if (button.contains('tui-first')) {
+    renderTodos();
+    return;
+  }
+  if (button.contains('tui-next-is-ellip')) {
+    const indxNextBtn = paginationBtnLocal.indexOf(e.currentTarget);
+    const indxCurrentPage = paginationBtnLocal.findIndex(x =>
+      x.classList.contains('tui-is-selected')
+    );
+    const currentPage = todoApi.page - 1;
+    const newPage = indxNextBtn - indxCurrentPage + currentPage;
+
+    renderTodos(newPage);
+    return;
+  }
+  if (button.contains('tui-prev-is-ellip')) {
+    const indxPrevBtn = paginationBtnLocal.indexOf(e.currentTarget);
+    const indxCurrentPage = paginationBtnLocal.findIndex(x =>
+      x.classList.contains('tui-is-selected')
+    );
+    const currentPage = todoApi.page - 1;
+    const newPage = currentPage - (indxCurrentPage - indxPrevBtn);
+    renderTodos(newPage);
+    return;
+  }
+
+  if (button.contains('tui-page-btn')) {
+    const currentPage = Number(e.currentTarget.textContent);
+    await renderTodos(currentPage);
+    if (currentPage >= todoApi.maxPages) {
+      VH.loadMoreOff();
+    }
+  }
+}
+
+// Кнопка "Показати ще"
 async function onClickBtnLoadMore() {
   Loading.pulse('Loading...');
   VH.loadingOn();
   VH.loadMoreOff();
+
   await todoApi.fetchApi().then(r => {
+    addPagination(todoApi.page);
     if (todoApi.page >= todoApi.maxPages) {
-      console.log(todoApi.page);
-      console.log(todoApi.maxPages);
       Notify.info('Відображено всі записи!', { width: '205px' });
       Loading.remove();
       VH.loadingOff();
@@ -61,6 +141,7 @@ async function onClickBtnLoadMore() {
       const itemsList = r.map(newItem).join('');
 
       refs.todoList.insertAdjacentHTML('beforeend', itemsList);
+      addPagination(todoApi.maxPages);
       return;
     }
 
@@ -73,8 +154,6 @@ async function onClickBtnLoadMore() {
     todoApi.pageIncrement();
   });
   scrollOnBtnLoadMore();
-  console.log(todoApi.page);
-  console.log(todoApi.maxPages);
 }
 
 async function addNewItem(e) {
@@ -229,7 +308,7 @@ function onClickInputPageLimit(e) {
       break;
 
     default:
-      todoApi.limitPage = 5;
+      todoApi.limitPage = todoApi.DEFAULT_LIMIT_PAGE;
       renderTodos();
       break;
   }
