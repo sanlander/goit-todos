@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export class TodoApi {
-  DEFAULT_LIMIT_PAGE = 2;
+  DEFAULT_LIMIT_PAGE = 5;
 
   constructor() {
     this.url = 'https://630b95ba83986f74a7b3a073.mockapi.io/api/v1/items';
