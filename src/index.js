@@ -1,5 +1,5 @@
 import Pagination from 'tui-pagination';
-import 'tui-pagination/dist/tui-pagination.css';
+// import 'tui-pagination/dist/tui-pagination.css';
 import moment from 'moment';
 import './css/style.css';
 import * as basicLightbox from 'basiclightbox';
