@@ -6,13 +6,12 @@ export const refs = {
   inputSort: document.querySelector('.todo-filter__input.sort'),
   inputPageLimit: document.querySelector('.page-limit'),
   clock: document.querySelector('.clock'),
-  loading: document.querySelector('.loading'),
+  loadingHome: document.querySelector('.loading'),
   loadMoreBtn: document.querySelector('.load-more'),
   pageUpBtn: document.querySelector('.page-up'),
   body: document.querySelector('body'),
   totalItems: document.querySelector('.total-page'),
   inputPageLimitDefault: document.querySelector('.page-default'),
-  // paginationBtn: document.querySelector('.tui-pagination'),
+  weather: document.querySelector('.weather'),
+  loadingWeather: document.querySelector('.weather__loading'),
 };
-
-

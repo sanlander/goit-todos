@@ -1,10 +1,10 @@
 import { refs } from './refs';
 
-export async function loadingOn() {
-  refs.loading.classList.remove('visually-hidden');
+export async function loadingHomeOn() {
+  refs.loadingHome.classList.remove('visually-hidden');
 }
-export async function loadingOff() {
-  refs.loading.classList.add('visually-hidden');
+export async function loadingHomeOff() {
+  refs.loadingHome.classList.add('visually-hidden');
 }
 
 export async function loadMoreOff() {

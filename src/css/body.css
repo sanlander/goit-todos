@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 body {
   position: relative;
   background-color: rgb(252, 252, 236);
@@ -21,6 +24,6 @@ body {
 
 .box-todo-filter {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }

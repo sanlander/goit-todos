@@ -1,12 +1,13 @@
 .clock {
+  width: 210px;
   border: 1px solid orangered;
   border-radius: 5px;
-  background: rgb(63, 74, 84);
+  background: #51607e;
   color: #f4f5f6;
   padding: 10px;
   position: fixed;
   top: 5px;
-  left: 5px;
+  left: 10px;
   margin: 0;
   -webkit-box-shadow: -10px 10px 9px 0px rgba(91, 99, 166, 1);
   -moz-box-shadow: -10px 10px 9px 0px rgba(91, 99, 166, 1);

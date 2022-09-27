@@ -11,20 +11,24 @@ import debounce from 'lodash.debounce';
 import { refs } from './js/refs';
 import { currentTimeOnHomePage } from './js/clock';
 import { TodoApi } from './js/todos-API';
+import { renderWeather } from './js/weather-API';
 import { newItem } from './js/newToDo';
 import * as VH from './js/visually-hidden';
 import './js/scrollUpBtn';
+import './js/weather-API';
 
 const todoApi = new TodoApi();
 
 currentTimeOnHomePage();
 
+
 renderTodos();
+renderWeather();
 
 async function renderTodos(value) {
   refs.inputPageLimitDefault.textContent = `${todoApi.DEFAULT_LIMIT_PAGE} записів на сторінці`;
   Loading.pulse('Loading...');
-  VH.loadingOn();
+  VH.loadingHomeOn();
   await todoApi.resetPage(value);
   await todoApi.maxShowPages();
   await todoApi.getTotalItems();
@@ -35,7 +39,7 @@ async function renderTodos(value) {
     refs.todoList.innerHTML = itemsList;
 
     Loading.remove();
-    VH.loadingOff();
+    VH.loadingHomeOff();
     VH.loadMoreOn();
 
     todoApi.pageIncrement();
@@ -130,7 +134,7 @@ async function onPaginationBtnClick(e) {
 // Кнопка "Показати ще"
 async function onClickBtnLoadMore() {
   Loading.pulse('Loading...');
-  VH.loadingOn();
+  VH.loadingHomeOn();
   VH.loadMoreOff();
 
   await todoApi.fetchApi().then(r => {
@@ -138,7 +142,7 @@ async function onClickBtnLoadMore() {
     if (todoApi.page >= todoApi.maxPages) {
       Notify.info('Відображено всі записи!', { width: '205px' });
       Loading.remove();
-      VH.loadingOff();
+      VH.loadingHomeOff();
       VH.loadMoreOff();
       const itemsList = r.map(newItem).join('');
 
@@ -151,7 +155,7 @@ async function onClickBtnLoadMore() {
 
     refs.todoList.insertAdjacentHTML('beforeend', itemsList);
     Loading.remove();
-    VH.loadingOff();
+    VH.loadingHomeOff();
     VH.loadMoreOn();
     todoApi.pageIncrement();
   });
