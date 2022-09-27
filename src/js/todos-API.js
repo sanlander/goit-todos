@@ -20,18 +20,17 @@ export class TodoApi {
       )
       .then(r => r.data);
   }
-
   async getTotalItems() {
-    await axios.get(this.url).then(r => {
+    await axios.get(`${this.url}?text=${this.searchFiltervalue}`).then(r => {
       this.totalItems = r.data.length;
-    });
-  }
-
-  async maxShowPages() {
-    await axios.get(this.url).then(r => {
       this.maxPages = Math.ceil(r.data.length / this.limitPage);
     });
   }
+  // async maxShowPages() {
+  //   await axios.get(this.url).then(r => {
+  //     this.maxPages = Math.ceil(r.data.length / this.limitPage);
+  //   });
+  // }
 
   async getTodo(id) {
     return await axios.get(`${this.url}/${id}`).then(r => r.data);

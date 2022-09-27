@@ -21,7 +21,6 @@ const todoApi = new TodoApi();
 
 currentTimeOnHomePage();
 
-
 renderTodos();
 renderWeather();
 
@@ -30,7 +29,7 @@ async function renderTodos(value) {
   Loading.pulse('Loading...');
   VH.loadingHomeOn();
   await todoApi.resetPage(value);
-  await todoApi.maxShowPages();
+  // await todoApi.maxShowPages();
   await todoApi.getTotalItems();
 
   await todoApi.fetchApi().then(r => {
@@ -44,13 +43,14 @@ async function renderTodos(value) {
 
     todoApi.pageIncrement();
 
-    insertTotalItems();
+    // insertTotalItems();
     addPagination(value);
   });
+  await insertTotalItems();
 }
 
 async function insertTotalItems() {
-  refs.totalItems.innerHTML = `Знайдено ${todoApi.totalItems} записів`;
+  refs.totalItems.innerHTML = `Знайдено записів: ${todoApi.totalItems}`;
 }
 
 // Кнопки "Пагінації"
@@ -225,10 +225,13 @@ async function clickDeleteToDoList(e) {
   );
 }
 
-const sortListToDo = () => {
-  refs.inputSearch.value = '';
+const onSortListToDo = () => {
+  // refs.inputSearch.value = '';
+  // todoApi.searchFiltervalue = '';
 
   switch (refs.inputSort.value) {
+    case 'value-none':
+      return;
     case 'az':
       todoApi.sort = 'text&order=asc';
       renderTodos();
@@ -248,9 +251,9 @@ const sortListToDo = () => {
   }
 };
 
-const searchFilter = () => {
-  todoApi.searchFiltervalue = refs.inputSearch.value.toLowerCase();
-  renderTodos();
+const onSearchFilter = async () => {
+  todoApi.searchFiltervalue = await refs.inputSearch.value.toLowerCase();
+  await renderTodos();
 };
 
 async function onOffChecked(e) {
@@ -325,8 +328,8 @@ function scrollOnBtnLoadMore() {
 }
 
 // -------- EventListeners --------
-refs.inputSearch.addEventListener('input', debounce(searchFilter, 500));
-refs.inputSort.addEventListener('change', sortListToDo);
+refs.inputSearch.addEventListener('input', debounce(onSearchFilter, 500));
+refs.inputSort.addEventListener('change', onSortListToDo);
 refs.todoList.addEventListener('click', clickDeleteToDoList);
 refs.todoList.addEventListener('click', onOffChecked);
 refs.todoList.addEventListener('click', onShowModal);
